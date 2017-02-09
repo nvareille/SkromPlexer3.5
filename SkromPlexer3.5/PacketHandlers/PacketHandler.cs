@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using SkromPlexer.Network;
 using SkromPlexer.ServerCore;
 using SkromPlexer.Tools;
@@ -29,6 +30,8 @@ namespace SkromPlexer.PacketHandlers
 
         public void TreatPacket(Core Core, Client Client, Packet Packet)
         {
+            Console.WriteLine(Packet.Content);
+
             try
             {
                 string a = Packet.PacketAction();

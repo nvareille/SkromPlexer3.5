@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using SkromPlexer.Tools;
 
@@ -39,7 +40,7 @@ namespace SkromPlexer.Configuration
                 Log.Info("Loading config for {0} ... ", ConfigType.Name);
             string configVar = GetType().Name + "Config";
             string configFile = configVar + ".json";
-
+            
             object o = ConfigLoader.LoadConfigFile(configFile, ConfigVariable.FieldType);
             ConfigVariable.SetValue(ConfigObject, o);
             if (verbose)

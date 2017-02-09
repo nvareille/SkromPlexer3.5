@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -35,12 +36,15 @@ namespace SkromPlexer.Network
         public void Init(Core core)
         {
             ServerClients = core.GameServerClients;
-            Listener = new TcpListener(IPAddress.Any, PlexerConfig.Port);
+
+            if (core.IsServer)
+                Listener = new TcpListener(IPAddress.Any, PlexerConfig.Port);
         }
 
         public void Start(Core core)
         {
-            Listener.Start();
+            if (core.IsServer)
+                Listener.Start();
         }
 
         public void HandlePackets(Core core, Client client, Packet packet)
@@ -53,7 +57,7 @@ namespace SkromPlexer.Network
             Clients.RemoveAll(c => !c.IsConnected() && c.ExecuteDisconnectCallbacks());
             ServerClients.RemoveAll(c => !c.IsConnected() && c.ExecuteDisconnectCallbacks());
 
-            if (Listener.Pending())
+            if (core.IsServer && Listener.Pending())
             {
                 Clients.Add(new Client(Listener.AcceptSocket()));
             }
@@ -90,7 +94,7 @@ namespace SkromPlexer.Network
             ServerClients.Where(c => c.MustDisconnect).All(c => c.SocketDisconnect());
         }
 
-        public Client ConnectToServer(string IPAdress, int port)
+        public Client ConnectToServer(string IPAdress, int port, bool add = false)
         {
             IPAddress[] ip = Dns.GetHostAddresses(IPAdress);
 
@@ -98,7 +102,8 @@ namespace SkromPlexer.Network
             Socket.Connect(ip[0], port);
 
             Client c = new Client(Socket);
-            Clients.Add(c);
+            if (add)
+                Clients.Add(c);
 
             return (c);
         }

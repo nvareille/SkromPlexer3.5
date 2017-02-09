@@ -21,24 +21,17 @@ namespace SkromPlexer.ServerCore
     public class Core : AConfigurable
     {
         public CoreConfig CoreConfig;
-
-        private Data Data;
-
+        
         private List<AConfigurable> Configurables;
         private List<IModule> Modules;
-
         public Plexer Plexer;
-
-        //public List<Client> Clients;
-
         public List<ServerClient> GameServerClients;
 
+        public bool IsServer;
         public bool Running;
 
         public Core(IModule[] modules = null, APacketHandler[] packetHandlers = null, AConfigurable[] configurables = null)
         {
-            Data = new Data();
-
             foreach (string id in CoreConfig.ORMIndexes)
             {
                 new MysqlBDD(id);
@@ -63,10 +56,11 @@ namespace SkromPlexer.ServerCore
             GameServerClients = new List<ServerClient>();
         }
 
-        public void Init()
+        public void Init(bool server = true)
         {
+            IsServer = server;
             Log.Core = this;
-
+            
             Log.Info("\nInitializing modules ...\n");
             foreach (IModule module in Modules)
             {
@@ -78,10 +72,8 @@ namespace SkromPlexer.ServerCore
             Log.Info("Modules Initialized !\n");
         }
 
-        public void Run()
+        public void Start()
         {
-            Running = true;
-
             Log.Info("\nStarting modules ...\n");
             foreach (IModule module in Modules)
             {
@@ -93,18 +85,36 @@ namespace SkromPlexer.ServerCore
             Log.Info("Modules Started !\n");
 
             Log.Info("\nServer is running !\n");
+        }
+
+        public void Update()
+        {
+            foreach (IModule module in Modules)
+            {
+                module.Update(this);
+            }
+        }
+
+        public void Run()
+        {
+            Running = true;
+
+            Start();
+
             while (Running)
             {
-                foreach (IModule module in Modules)
-                {
-                    module.Update(this);
-                }
+                Update();
             }
         }
 
         public IModule GetModule(Type t)
         {
             return (Modules.First(c => c.GetType() == t));
+        }
+
+        public T GetModule<T>()
+        {
+            return ((T)Modules.First(c => c.GetType() == typeof(T)));
         }
 
         public InputModule GetInputModule()

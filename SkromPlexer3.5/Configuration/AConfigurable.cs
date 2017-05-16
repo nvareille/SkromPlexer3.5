@@ -13,6 +13,8 @@ namespace SkromPlexer.Configuration
 
         public AConfigurable()
         {
+            ConfigLoader.InitConfig();
+
             ConfigObject = this;
             ConfigType = GetType();
 

@@ -13,8 +13,8 @@ namespace SkromPlexer.Network
 {
     public class PlexerConfig
     {
-        public int Port;
-        public string IPToConnect;
+        public int Port = 8080;
+        public string IPToConnect = "127.0.0.1";
     }
 
     public class Plexer : AConfigurable, IModule

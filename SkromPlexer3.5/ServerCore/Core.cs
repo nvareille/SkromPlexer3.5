@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using DragonDreamServer.Classes.Modules.Input;
-using SkromPlexer.BDDORM;
 using SkromPlexer.Configuration;
 using SkromPlexer.Network;
 using SkromPlexer.PacketHandlers;
@@ -21,7 +20,9 @@ namespace SkromPlexer.ServerCore
     public class Core : AConfigurable
     {
         public CoreConfig CoreConfig;
-        
+
+        public object Data;
+
         private List<AConfigurable> Configurables;
         private List<IModule> Modules;
         public Plexer Plexer;
@@ -30,12 +31,21 @@ namespace SkromPlexer.ServerCore
         public bool IsServer;
         public bool Running;
 
+        public T GetData<T>()
+        {
+            return (Data.Cast<T>());
+        }
+
+        public void SetData(object d)
+        {
+            Data = d;
+        }
+
         public Core(IModule[] modules = null, APacketHandler[] packetHandlers = null, AConfigurable[] configurables = null)
         {
-            foreach (string id in CoreConfig.ORMIndexes)
+            /*foreach (string id in CoreConfig.ORMIndexes)
             {
-                new MysqlBDD(id);
-            }
+            }*/
 
             Plexer = new Plexer(packetHandlers);
             Configurables = configurables == null ? new List<AConfigurable>() : new List<AConfigurable>(configurables);

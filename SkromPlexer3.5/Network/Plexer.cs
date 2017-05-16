@@ -14,6 +14,7 @@ namespace SkromPlexer.Network
     public class PlexerConfig
     {
         public int Port;
+        public string IPToConnect;
     }
 
     public class Plexer : AConfigurable, IModule
@@ -21,7 +22,7 @@ namespace SkromPlexer.Network
         private TcpListener Listener;
         public List<Client> Clients;
         public List<Client> ToUpgrade;
-        protected PlexerConfig PlexerConfig;
+        public PlexerConfig PlexerConfig;
         private PacketHandler PacketHandler;
 
         private List<ServerClient> ServerClients;

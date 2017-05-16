@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace SkromPlexer.Network
 {
     public class PacketArg
     {
         private int Count;
-        private object[] Args;
+        public object[] Args;
 
-        public PacketArg(object[] args)
+        protected PacketArg(object[] args)
         {
             Count = 0;
             Args = args;
@@ -22,6 +23,11 @@ namespace SkromPlexer.Network
         public T Get<T>()
         {
             return ((T)Args[Count++]);
+        }
+
+        public static PacketArg CreatePacketArg(object[] args)
+        {
+            return (new PacketArg(args));
         }
     }
 
@@ -49,6 +55,7 @@ namespace SkromPlexer.Network
 
         public PacketArg GetArguments(Type[] types)
         {
+            CultureInfo c = new CultureInfo("en-us");
             List<object> arguments = new List<object>();
             string[] args = Content.Split(':')[1].Split(' ');
             int count = 0;
@@ -56,7 +63,7 @@ namespace SkromPlexer.Network
             foreach (string arg in args)
             {
                 if (count >= types.Length)
-                    return (new PacketArg(arguments.ToArray()));
+                    return (PacketArg.CreatePacketArg(arguments.ToArray()));
 
                 if (types[count] == typeof(bool))
                     arguments.Add(Convert.ToBoolean(arg));
@@ -64,10 +71,12 @@ namespace SkromPlexer.Network
                     arguments.Add(arg);
                 else if (types[count] == typeof(int))
                     arguments.Add(Convert.ToInt32(arg));
+                else if (types[count] == typeof(float))
+                    arguments.Add(float.Parse(arg.Replace(',', '.'), c));
                 ++count;
             }
 
-            return (new PacketArg(arguments.ToArray()));
+            return (PacketArg.CreatePacketArg(arguments.ToArray()));
         }
 
         public List<Packet> ToList()
@@ -90,6 +99,24 @@ namespace SkromPlexer.Network
 
             l.Add(p);
             return (l);
+        }
+
+        public static List<Packet> operator +(Packet p, List<Packet> list)
+        {
+            List<Packet> l = new List<Packet>();
+
+            l.Add(p);
+            l.AddRange(list);
+            return (l);
+        }
+    }
+
+    public static class PacketExtend
+    {
+        public static List<Packet> Append(this List<Packet> l1, List<Packet> l2)
+        {
+            l1.AddRange(l2);
+            return (l1);
         }
     }
 }

@@ -25,12 +25,14 @@ namespace SkromPlexer.PacketHandlers
                 {
                     packetHandler.Init(Actions);
                 }
+
+
             }
         }
 
         public void TreatPacket(Core Core, Client Client, Packet Packet)
         {
-            Console.WriteLine(Packet.Content);
+            //Console.WriteLine(Packet.Content);
 
             try
             {
@@ -51,8 +53,8 @@ namespace SkromPlexer.PacketHandlers
             catch (Exception e)
             {
                 Log.Error("EXCEPTION: " + e.Message);
-                if (!Core.CoreConfig.IsRelease)
-                    throw;
+                //if (!Core.CoreConfig.IsRelease)
+                    throw e;
             }
         }
 

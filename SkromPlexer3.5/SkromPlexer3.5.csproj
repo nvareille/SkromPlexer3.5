@@ -19,7 +19,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\Gamit\MultiplayerVirZoom\Assets\DLL\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -43,8 +43,8 @@
       <HintPath>..\..\FFTCGSimulator\FFTCGSimulatorServer\FFTCGSimulatorServer\packages\MySql.Data.6.7.9\lib\net20\MySql.Data.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\FFTCGSimulator\FFTCGSimulatorServer\FFTCGSimulatorServer\packages\Newtonsoft.Json.9.0.1\lib\net35\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\Gamit\MultiplayerVirZoom\packages\Newtonsoft.Json.10.0.2\lib\net35\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -55,13 +55,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BDDORM\MysqlBDD.cs" />
-    <Compile Include="BDDORM\ORM.cs" />
-    <Compile Include="BDDORM\ORMGetter.cs" />
-    <Compile Include="BDDORM\ORMManager.cs" />
     <Compile Include="Configuration\AConfigurable.cs" />
     <Compile Include="Configuration\ConfigLoader.cs" />
-    <Compile Include="Models\BDDModel.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="Modules\Input\Input.cs" />
     <Compile Include="Modules\Routine\RoutineModule.cs" />

@@ -41,10 +41,20 @@ namespace SkromPlexer.Network
 
         public bool IsConnected()
         {
-            bool part1 = Socket.Poll(0, SelectMode.SelectRead);
-            bool part2 = (Socket.Available == 0);
+            if (Socket == null || !Socket.Connected)
+                return (false);
 
-            return ((!part1 || !part2) && Socket.Connected);
+            try
+            {
+                bool part1 = Socket.Poll(0, SelectMode.SelectRead);
+                bool part2 = (Socket.Available == 0);
+
+                return ((!part1 || !part2));
+            }
+            catch (Exception)
+            {
+                return (false);
+            }
         }
 
         public void GetPackets()
@@ -136,7 +146,10 @@ namespace SkromPlexer.Network
 
         public bool SocketDisconnect()
         {
-            Socket.Disconnect(false);
+            Socket.Shutdown(SocketShutdown.Both);
+            Socket.Close();
+            MustDisconnect = true;
+            //Socket = null;
             return (true);
         }
 

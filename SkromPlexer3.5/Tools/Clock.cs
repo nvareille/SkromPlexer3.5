@@ -5,6 +5,7 @@ namespace SkromPlexer.Tools
     public class Clock
     {
         private DateTime a;
+        private DateTime b;
 
         public void Start()
         {
@@ -13,9 +14,16 @@ namespace SkromPlexer.Tools
 
         public double GetElapsed()
         {
-            TimeSpan b = DateTime.Now - a;
+            TimeSpan t = (b == null ? DateTime.Now - a : b - a);
 
-            return (b.TotalMilliseconds);
+            return (t.TotalMilliseconds);
+        }
+
+        public double Stop()
+        {
+            b = DateTime.Now;
+
+            return (GetElapsed());
         }
     }
 }

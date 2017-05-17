@@ -5,6 +5,34 @@ using SkromPlexer.Network;
 
 namespace SkromPlexer.PacketHandlers
 {
+    public class PacketHandler : Attribute { }
+
+    public class PacketCreator : Attribute { }
+
+    public class PacketHandlerFunction : Attribute
+    {
+        public Type[] Args;
+
+        public PacketHandlerFunction(Type[] args = null)
+        {
+            Args = args;
+        }
+    }
+
+    public class PacketCreatorFunction : Attribute
+    {
+        public string Packet;
+        public Type[] Args;
+
+        public PacketCreatorFunction(string packet, Type[] args = null)
+        {
+            Packet = packet;
+            Args = args;
+        }
+    }
+
+
+
     public class APacketHandler
     {
         public virtual void Init(Dictionary<string, PacketHandlerDelegate> Actions)

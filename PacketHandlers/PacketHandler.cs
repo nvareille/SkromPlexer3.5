@@ -11,11 +11,11 @@ namespace SkromPlexer.PacketHandlers
 
     class NotLogguedInException : Exception { };
 
-    public class PacketHandler
+    public class PacketHandlerManager
     {
         private Dictionary<string, PacketHandlerDelegate> Actions;
 
-        public PacketHandler(APacketHandler[] packetHandlers)
+        public PacketHandlerManager(APacketHandler[] packetHandlers)
         {
             Actions = new Dictionary<string, PacketHandlerDelegate>();
 

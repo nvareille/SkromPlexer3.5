@@ -23,7 +23,7 @@ namespace SkromPlexer.Network
         public List<Client> Clients;
         public List<Client> ToUpgrade;
         public PlexerConfig PlexerConfig;
-        private PacketHandler PacketHandler;
+        private PacketHandlerManager PacketHandler;
 
         private List<ServerClient> ServerClients;
         
@@ -31,7 +31,7 @@ namespace SkromPlexer.Network
         {
             Clients = new List<Client>();
             ToUpgrade = new List<Client>();
-            PacketHandler = new PacketHandler(packetHandlers);
+            PacketHandler = new PacketHandlerManager(packetHandlers);
         }
 
         public void Init(Core core)

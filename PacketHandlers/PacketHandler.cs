@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection;
 using SkromPlexer.Network;
 using SkromPlexer.ServerCore;
 using SkromPlexer.Tools;
@@ -44,6 +45,10 @@ namespace SkromPlexer.PacketHandlers
 
                     if (packets != null)
                         Client.SendingPackets.AddRange(packets);
+                }
+                else
+                {
+                    Console.WriteLine("Warning: Packet {0} isn't registered !", a);
                 }
             }
             catch (NotLogguedInException)

@@ -2,7 +2,7 @@ SkromPlexer
 
 A simple Networking library for client / server communication for .NET 3.5
 
-[![Build status](https://ci.appveyor.com/api/projects/status/mbqioqqfao6j3jvl/branch/ORMLess?svg=true)](https://ci.appveyor.com/project/nvareille/skromplexer3-5/branch/ORMLess)
+[![Build status](https://ci.appveyor.com/api/projects/status/mbqioqqfao6j3jvl/branch/master?svg=true)](https://ci.appveyor.com/project/nvareille/skromplexer3-5/branch/master)
 
 ---
 

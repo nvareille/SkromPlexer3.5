@@ -1,0 +1,11 @@
+D:\Projects\SkromPlexer3.5\SkromPlexer3.5\obj\Debug\SkromPlexer3.5.csprojResolveAssemblyReference.cache
+D:\Projects\SkromPlexer3.5\SkromPlexer3.5\bin\Debug\SkromPlexer3.5.dll.config
+D:\Projects\SkromPlexer3.5\SkromPlexer3.5\bin\Debug\SkromPlexer3.5.dll
+D:\Projects\SkromPlexer3.5\SkromPlexer3.5\bin\Debug\SkromPlexer3.5.pdb
+D:\Projects\SkromPlexer3.5\SkromPlexer3.5\bin\Debug\Newtonsoft.Json.dll
+D:\Projects\SkromPlexer3.5\SkromPlexer3.5\bin\Debug\Newtonsoft.Json.xml
+D:\Projects\SkromPlexer3.5\SkromPlexer3.5\obj\Debug\SkromPlexer3.5.dll
+D:\Projects\SkromPlexer3.5\SkromPlexer3.5\obj\Debug\SkromPlexer3.5.pdb
+D:\Projects\Gamit\MultiplayerVirZoom\Assets\DLL\SkromPlexer3.5.dll.config
+D:\Projects\Gamit\MultiplayerVirZoom\Assets\DLL\SkromPlexer3.5.dll
+D:\Projects\Gamit\MultiplayerVirZoom\Assets\DLL\SkromPlexer3.5.pdb

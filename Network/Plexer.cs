@@ -13,7 +13,8 @@ namespace SkromPlexer.Network
 {
     public class PlexerConfig
     {
-        public int Port;
+        public int Port = 8080;
+        public string IPToConnect = "127.0.0.1";
     }
 
     public class Plexer : AConfigurable, IModule
@@ -21,8 +22,8 @@ namespace SkromPlexer.Network
         private TcpListener Listener;
         public List<Client> Clients;
         public List<Client> ToUpgrade;
-        protected PlexerConfig PlexerConfig;
-        private PacketHandler PacketHandler;
+        public PlexerConfig PlexerConfig;
+        private PacketHandlerManager PacketHandler;
 
         private List<ServerClient> ServerClients;
         
@@ -30,7 +31,7 @@ namespace SkromPlexer.Network
         {
             Clients = new List<Client>();
             ToUpgrade = new List<Client>();
-            PacketHandler = new PacketHandler(packetHandlers);
+            PacketHandler = new PacketHandlerManager(packetHandlers);
         }
 
         public void Init(Core core)

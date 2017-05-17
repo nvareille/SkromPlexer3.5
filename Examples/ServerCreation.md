@@ -75,4 +75,4 @@ Let's modify it !
 
 ---
 
-<div style="text-align: right;"> your-text-here </div>
+<div style="text-align: right;">Examples.md</div><div style="text-align: right;">Examples.md</div>

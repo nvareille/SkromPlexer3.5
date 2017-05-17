@@ -23,7 +23,8 @@ namespace SkromPlexer.Configuration
                     Directory.CreateDirectory(Config.Path);
                     File.WriteAllText("Config.json", JsonConvert.SerializeObject(Config, Formatting.Indented));
                 }
-                Console.WriteLine(String.Format("Impossible to load the config file ({0}). An empty config file was created", path));
+                Console.WriteLine(
+                    String.Format("Impossible to load the config file ({0}). An empty config file was created", path));
             }
             return (JsonConvert.DeserializeObject<T>(File.ReadAllText(path)));
         }
@@ -33,7 +34,7 @@ namespace SkromPlexer.Configuration
             if (!File.Exists(path))
             {
                 File.WriteAllText(path, JsonConvert.SerializeObject(Activator.CreateInstance(obj), Formatting.Indented));
-                throw new FileNotFoundException(String.Format("Impossible to load the config file ({0})", path));
+                throw new FileNotFoundException(String.Format("Impossible to load the config file ({0}), Creating it", path));
             }
             return (JsonConvert.DeserializeObject(File.ReadAllText(path), obj));
         }
@@ -50,7 +51,14 @@ namespace SkromPlexer.Configuration
 
         public static object LoadConfigFile(string file, Type obj)
         {
-            return (LoadJson(Config.Path + file, obj));
+            try
+            {
+                return (LoadJson(Config.Path + file, obj));
+            }
+            catch (Exception)
+            {
+                return (LoadJson(Config.Path + file, obj));
+            }
         }
     }
 }

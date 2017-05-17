@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Reflection;
+using SkromPlexer.PacketHandlers;
 
 namespace SkromPlexer.Network
 {
@@ -31,21 +33,61 @@ namespace SkromPlexer.Network
         }
     }
 
+    public class CriticPacket : Packet
+    {
+        public CriticPacket(string content) : base(content)
+        {
+            IsCriticPacket = true;
+        }
+
+        public CriticPacket(string content, params object[] args) : base(content, args)
+        {
+            IsCriticPacket = true;
+        }
+
+        public CriticPacket(MethodBase info, params object[] args) : base(info, args)
+        {
+            IsCriticPacket = true;
+        }
+    }
+
     public class Packet
     {
         public string Content;
         public bool IsCriticPacket;
 
-        public Packet(string content, bool c = false)
+        public Packet(MethodBase info, params object[] args)
         {
-            Content = content;
-            IsCriticPacket = c;
+            PacketCreatorFunction p = (PacketCreatorFunction)info.GetCustomAttributes(typeof(PacketCreatorFunction), false)[0];
+
+            Content = p.Packet + ":" + GenArgs(args) + "\n";
         }
 
-        public Packet(string content, bool c, params object[] args)
+        private string GenArgs(object[] args)
+        {
+            string str = "";
+            bool padding = false;
+
+            if (args != null)
+            {
+                foreach (object arg in args)
+                {
+                    str += String.Format("{0}{1}", (padding ? " " : ""), arg);
+                    padding = true;
+                }
+            }
+
+            return (str);
+        }
+
+        public Packet(string content)
+        {
+            Content = content;
+        }
+
+        public Packet(string content, params object[] args)
         {
             Content = String.Format(content, args);
-            IsCriticPacket = c;
         }
 
         public string PacketAction()

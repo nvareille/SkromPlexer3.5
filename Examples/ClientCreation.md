@@ -44,4 +44,4 @@ The Packets and Data will always be treated on ```Core.Update()``` if available
 
 ---
 
-# Next Example: [PacketCreator & Best Practices](PacketCreator.md)
+## [<< Server Creation](ServerCreation.md) | [PacketCreator & Best Practices >>](PacketCreator.md)

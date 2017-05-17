@@ -73,4 +73,6 @@ Let's modify it !
 - The 'IPToConnect' field is only used client side
 - Your server is configured !
 
-# Next Example: [Client Creation](ClientCreation.md)
+---
+
+<div style="text-align: right;"> your-text-here </div>

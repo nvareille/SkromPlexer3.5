@@ -95,7 +95,7 @@ namespace SkromPlexer.Network
             ServerClients.Where(c => c.MustDisconnect).All(c => c.SocketDisconnect());
         }
 
-        public Client ConnectToServer(string IPAdress, int port, bool add = false)
+        public Client ConnectToServer(string IPAdress, int port, bool add = true)
         {
             IPAddress[] ip = Dns.GetHostAddresses(IPAdress);
 

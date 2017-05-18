@@ -10,6 +10,9 @@ namespace SkromPlexer.Network
 {
     public delegate void ClientDisconnectDelegate();
 
+    /// <summary>
+    /// A class for handling client connection
+    /// </summary>
     public class Client
     {
         private const int BufferSize = 1024;
@@ -25,6 +28,10 @@ namespace SkromPlexer.Network
 
         public Tuple<string, string> UpgradeArgs;
 
+        /// <summary>
+        /// The class constructor
+        /// </summary>
+        /// <param name="socket">A socket from this client</param>
         public Client(Socket socket)
         {
             Socket = socket;
@@ -34,11 +41,19 @@ namespace SkromPlexer.Network
             DisconnectCallbacks = new List<ClientDisconnectDelegate>();
         }
 
+        /// <summary>
+        /// Get the socket from this client
+        /// </summary>
+        /// <returns>The client's socket</returns>
         public Socket GetSocket()
         {
             return (Socket);
         }
 
+        /// <summary>
+        /// Checks if the client is still connected
+        /// </summary>
+        /// <returns>true if connected, false otherwise</returns>
         public bool IsConnected()
         {
             if (Socket == null || !Socket.Connected)
@@ -57,6 +72,9 @@ namespace SkromPlexer.Network
             }
         }
 
+        /// <summary>
+        /// Will extract data to create Packets
+        /// </summary>
         public void GetPackets()
         {
             byte[] buffer = new byte[BufferSize];
@@ -67,6 +85,9 @@ namespace SkromPlexer.Network
                 ReceivedPackets.AddRange(PacketBuilder.ExtractPackets());
         }
 
+        /// <summary>
+        /// Tries to send the available Packets
+        /// </summary>
         public void SendPackets()
         {
             bool Error = false;
@@ -93,6 +114,9 @@ namespace SkromPlexer.Network
             }
         }
 
+        /// <summary>
+        /// Check if data is available on the socket and extract packets
+        /// </summary>
         public void TryGetPackets()
         {
             try
@@ -106,6 +130,9 @@ namespace SkromPlexer.Network
             }
         }
 
+        /// <summary>
+        /// Check if packets could be sent and sends them
+        /// </summary>
         public void TrySendPackets()
         {
             try
@@ -120,6 +147,11 @@ namespace SkromPlexer.Network
             
         }
 
+        /// <summary>
+        /// Handles the packets and call the PacketHandler
+        /// </summary>
+        /// <param name="core">A reference to Core</param>
+        /// <param name="plexer">A reference to Plexer</param>
         public void TreatPackets(Core core, Plexer plexer)
         {
             while (ReceivedPackets.Any())
@@ -131,12 +163,22 @@ namespace SkromPlexer.Network
             }
         }
 
+        /// <summary>
+        /// Check if we received data and try to call the corresponding packet handlers
+        /// </summary>
+        /// <param name="core">A reference to Core</param>
+        /// <param name="plexer">A reference to Plexer</param>
         public void TryTreatPacket(Core core, Plexer plexer)
         {
             if (ReceivedPackets.Any())
                 TreatPackets(core, plexer);
         }
 
+        /// <summary>
+        /// Disonnects the client's Socket while sending a Packet
+        /// </summary>
+        /// <param name="packet">Packet to send</param>
+        /// <returns>true</returns>
         public bool Disconnect(Packet packet)
         {
             MustDisconnect = true;
@@ -144,21 +186,33 @@ namespace SkromPlexer.Network
             return (true);
         }
 
+        /// <summary>
+        /// Immediatly disconnects a socket
+        /// </summary>
+        /// <returns>true</returns>
         public bool SocketDisconnect()
         {
             Socket.Shutdown(SocketShutdown.Both);
             Socket.Close();
             MustDisconnect = true;
-            //Socket = null;
             return (true);
         }
 
+        /// <summary>
+        /// Adds a packet to the SendingPackets
+        /// </summary>
+        /// <param name="p">PAcket to send</param>
+        /// <returns>true</returns>
         public bool AddPacket(Packet p)
         {
             SendingPackets.Add(p);
             return (true);
         }
 
+        /// <summary>
+        /// Will execute the disconnection callbacks
+        /// </summary>
+        /// <returns>true</returns>
         public bool ExecuteDisconnectCallbacks()
         {
             foreach (var disconnectCallback in DisconnectCallbacks)

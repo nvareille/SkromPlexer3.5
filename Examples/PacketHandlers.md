@@ -31,7 +31,7 @@ The tool will load all libraries and resolve missing references so the extractio
 # PacketHandler Output
 Here is the raw file output:
 ```cs
-public class TestPacketCreatorPacketHandler : APacketHandler
+public class TestPacketHandler : APacketHandler
 {
 	public static List<Packet> Test(Core core, Client client, Packet packet)
 	{
@@ -64,7 +64,7 @@ The packetHandlers will treat the packets sent by both sides.
 In a game for example, it is normal that a server will start a game session if a user sends a 'Start' Packet.
 
 ```cs
-public class TestPacketCreatorPacketHandler : APacketHandler
+public class TestPacketHandler : APacketHandler
 {
 	// This Method will be called if the other side sends a 'Test' Packet ("Test:\n")
 	public static List<Packet> Test(Core core, Client client, Packet packet)
@@ -84,8 +84,14 @@ public class TestPacketCreatorPacketHandler : APacketHandler
 		});
 
 		// We retrive the first argument as int (The correct type)
-		int it = args.Get<int>(0);
+		int id = args.Get<int>(0);
+		
+		// We get our previously stored instance for data processing
+		var instance = core.GetData<OurCustomClass>();
 
+		// Do some stuff
+		instance.ProcessId(id);
+		
 		// Direct answer from us, we return a list of Packets (Or convert a Packet to a list)
 		// 'new Packet("Ok:\n") + new Packet("Thanks:\n")' adding Packets to create a list is possible too
 		return (new Packet("Ok:\n").ToList());
@@ -97,4 +103,24 @@ public class TestPacketCreatorPacketHandler : APacketHandler
 
 ---
 
-# [<< Packet Creator](PacketCreator.md) |
+# How to register the Packet Handler ?
+
+Since our PacketHandler is created, we have to register it in our Plexer. It's really easy to do, but we have to not forget it !
+
+Go where you instanced the Core class:
+
+```cs
+// The second parameter here is an array of Packet Handlers to use
+Core Core = new Core(null, new APacketHandler[]
+{
+	new TestPacketHandler()
+});
+		
+// Then we do our usual stuff
+Core.Init();
+Core.Run();
+```
+
+---
+
+# [<< Packet Creator](PacketCreator.md) | [Modules >>](Modules.md)

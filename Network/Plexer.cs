@@ -11,12 +11,18 @@ using SkromPlexer.ServerCore;
 
 namespace SkromPlexer.Network
 {
+    /// <summary>
+    /// Represents a configuration for the Plexer
+    /// </summary>
     public class PlexerConfig
     {
         public int Port = 8080;
         public string IPToConnect = "127.0.0.1";
     }
 
+    /// <summary>
+    /// An implementation of a Network multiplexer
+    /// </summary>
     public class Plexer : AConfigurable, IModule
     {
         private TcpListener Listener;
@@ -27,6 +33,10 @@ namespace SkromPlexer.Network
 
         private List<ServerClient> ServerClients;
         
+        /// <summary>
+        /// The class constructon
+        /// </summary>
+        /// <param name="packetHandlers">PacketHandlers to use</param>
         public Plexer(APacketHandler[] packetHandlers)
         {
             Clients = new List<Client>();
@@ -34,6 +44,10 @@ namespace SkromPlexer.Network
             PacketHandler = new PacketHandlerManager(packetHandlers);
         }
 
+        /// <summary>
+        /// The Init function
+        /// </summary>
+        /// <param name="core">A reference to Core</param>
         public void Init(Core core)
         {
             ServerClients = core.GameServerClients;
@@ -42,17 +56,31 @@ namespace SkromPlexer.Network
                 Listener = new TcpListener(IPAddress.Any, PlexerConfig.Port);
         }
 
+        /// <summary>
+        /// The Start function
+        /// </summary>
+        /// <param name="core">A reference to Core</param>
         public void Start(Core core)
         {
             if (core.IsServer)
                 Listener.Start();
         }
 
+        /// <summary>
+        /// Will execute the PacketHandlers
+        /// </summary>
+        /// <param name="core">A reference to Core</param>
+        /// <param name="client">The client sending the Packet</param>
+        /// <param name="packet">The Packet that calls the PacketHandler</param>
         public void HandlePackets(Core core, Client client, Packet packet)
         {
             PacketHandler.TreatPacket(core, client, packet);
         }
 
+        /// <summary>
+        /// The Update function
+        /// </summary>
+        /// <param name="core">A reference to Core</param>
         public void Update(Core core)
         {
             Clients.RemoveAll(c => !c.IsConnected() && c.ExecuteDisconnectCallbacks());
@@ -89,13 +117,23 @@ namespace SkromPlexer.Network
             ForceDisconnect();
         }
 
+        /// <summary>
+        /// Will disconnect every Client that musn't stay connected
+        /// </summary>
         public void ForceDisconnect()
         {
             Clients.Where(c => c.MustDisconnect).All(c => c.SocketDisconnect());
             ServerClients.Where(c => c.MustDisconnect).All(c => c.SocketDisconnect());
         }
 
-        public Client ConnectToServer(string IPAdress, int port, bool add = false)
+        /// <summary>
+        /// Connect to a server
+        /// </summary>
+        /// <param name="IPAdress">The IP to connect to</param>
+        /// <param name="port">The port to use</param>
+        /// <param name="add">Will the client be added to the client list in the Plexer ?</param>
+        /// <returns>A client connected to the Server</returns>
+        public Client ConnectToServer(string IPAdress, int port, bool add = true)
         {
             IPAddress[] ip = Dns.GetHostAddresses(IPAdress);
 

@@ -19,7 +19,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\Gamit\MultiplayerVirZoom\Assets\DLL\</OutputPath>
+    <OutputPath>..\Gamit\PSVR\Assets\DLL\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -44,7 +44,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\Gamit\MultiplayerVirZoom\packages\Newtonsoft.Json.10.0.2\lib\net35\Newtonsoft.Json.dll</HintPath>
+      <HintPath>packages\Newtonsoft.Json.10.0.1\lib\net35\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -73,7 +73,6 @@
     <Compile Include="Tools\Log.cs" />
     <Compile Include="Tools\Randomizer.cs" />
     <Compile Include="ServerCore\Core.cs" />
-    <Compile Include="ServerCore\Data.cs" />
     <Compile Include="ServerCore\IModule.cs" />
     <Compile Include="Tools\Hasher.cs" />
     <Compile Include="Modules\ThreadManager.cs" />

@@ -30,6 +30,7 @@ namespace SkromPlexer.PacketHandlers
     {
         public string Packet;
         public Type[] Args;
+        public string[] StringArgs;
 
         /// <summary>
         /// The attribute's constructor
@@ -40,6 +41,12 @@ namespace SkromPlexer.PacketHandlers
         {
             Packet = packet;
             Args = args;
+        }
+
+        public PacketCreatorFunction(string packet, string[] args)
+        {
+            Packet = packet;
+            StringArgs = args;
         }
     }
 

@@ -146,5 +146,26 @@ namespace SkromPlexer.Network
 
             return (c);
         }
+
+        public Client ConnectToServerTimeout(string IPAdress, int port, bool add = true, int timeout = 1000)
+        {
+            IPAddress[] ip = Dns.GetHostAddresses(IPAdress);
+
+            Socket Socket = new Socket(ip[0].AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            IAsyncResult result = Socket.BeginConnect(ip[0], port, null, null);
+            bool success = result.AsyncWaitHandle.WaitOne(timeout, true);
+
+            if (!success)
+            {
+                Socket.Close();
+                return (null);
+            }
+
+            Client c = new Client(Socket);
+            if (add)
+                Clients.Add(c);
+
+            return (c);
+        }
     }
 }

@@ -53,6 +53,8 @@ namespace SkromPlexer.PacketHandlers
 
                 if (Actions.ContainsKey(a))
                 {
+                    //Console.WriteLine(Packet.Content);
+
                     List<Packet> packets = Actions[a](Core, Client, Packet);
 
                     if (packets != null)

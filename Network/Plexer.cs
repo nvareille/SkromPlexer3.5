@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using SkromPlexer.Configuration;
 using SkromPlexer.PacketHandlers;
 using SkromPlexer.ServerCore;
@@ -27,6 +29,7 @@ namespace SkromPlexer.Network
     {
         private TcpListener Listener;
         public List<Client> Clients;
+        public List<Client> ToAddClients;
         public List<Client> ToUpgrade;
         public PlexerConfig PlexerConfig;
         private PacketHandlerManager PacketHandler;
@@ -40,6 +43,7 @@ namespace SkromPlexer.Network
         public Plexer(APacketHandler[] packetHandlers)
         {
             Clients = new List<Client>();
+            ToAddClients = new List<Client>();
             ToUpgrade = new List<Client>();
             PacketHandler = new PacketHandlerManager(packetHandlers);
         }
@@ -88,7 +92,7 @@ namespace SkromPlexer.Network
 
             if (core.IsServer && Listener.Pending())
             {
-                Clients.Add(new Client(Listener.AcceptSocket()));
+                Clients.Add(new Client(Listener.AcceptSocket(), true));
             }
 
             foreach (var client in Clients)
@@ -114,6 +118,9 @@ namespace SkromPlexer.Network
                 ServerClients.Add(c);
             }
 
+            Clients.AddRange(ToAddClients);
+            ToAddClients.Clear();
+
             ForceDisconnect();
         }
 
@@ -133,18 +140,28 @@ namespace SkromPlexer.Network
         /// <param name="port">The port to use</param>
         /// <param name="add">Will the client be added to the client list in the Plexer ?</param>
         /// <returns>A client connected to the Server</returns>
-        public Client ConnectToServer(string IPAdress, int port, bool add = true)
+        public Client ConnectToServer(string IPAdress, int port, bool add = true, int connectionToken = 0)
         {
             IPAddress[] ip = Dns.GetHostAddresses(IPAdress);
 
-            Socket Socket = new Socket(ip[0].AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            Socket.Connect(ip[0], port);
+            foreach (IPAddress address in ip)
+            {
+                try
+                {
+                    Socket Socket = new Socket(address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                    Socket.Connect(address, port);
+                    Socket.Send(BitConverter.GetBytes(connectionToken));
 
-            Client c = new Client(Socket);
-            if (add)
-                Clients.Add(c);
+                    Client c = new Client(Socket);
+                    if (add)
+                        ToAddClients.Add(c);
 
-            return (c);
+                    return (c);
+                }
+                catch(Exception) { }
+            }
+            
+            return (null);
         }
 
         public Client ConnectToServerTimeout(string IPAdress, int port, bool add = true, int timeout = 1000)
@@ -163,7 +180,7 @@ namespace SkromPlexer.Network
 
             Client c = new Client(Socket);
             if (add)
-                Clients.Add(c);
+                ToAddClients.Add(c);
 
             return (c);
         }

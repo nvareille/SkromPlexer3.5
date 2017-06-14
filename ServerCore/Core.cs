@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using SkromPlexer.Configuration;
+using SkromPlexer.Modules.Download;
 using SkromPlexer.Modules.Input;
 using SkromPlexer.Network;
 using SkromPlexer.PacketHandlers;
@@ -81,6 +82,7 @@ namespace SkromPlexer.ServerCore
 
             Configurables.Add(Plexer);
             Modules.Add(Plexer);
+            Modules.Add(new DownloadModule());
             Modules.Add(new InputModule());
 
             if (modules != null)

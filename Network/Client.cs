@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
@@ -26,19 +27,34 @@ namespace SkromPlexer.Network
         public List<ClientDisconnectDelegate> DisconnectCallbacks;
         public object UserData;
 
+        public bool IsFileSocket;
+        public int DLToken;
+
         public Tuple<string, string> UpgradeArgs;
 
         /// <summary>
         /// The class constructor
         /// </summary>
         /// <param name="socket">A socket from this client</param>
-        public Client(Socket socket)
+        public Client(Socket socket, bool tryfile = false)
         {
             Socket = socket;
             PacketBuilder = new PacketBuilder();
             ReceivedPackets = new List<Packet>();
             SendingPackets = new List<Packet>();
             DisconnectCallbacks = new List<ClientDisconnectDelegate>();
+
+            if (tryfile)
+            {
+                byte[] a = new byte[4];
+                int i = Socket.Receive(a);
+                DLToken = BitConverter.ToInt32(a, 0);
+
+                if (DLToken != 0)
+                {
+                    IsFileSocket = true;
+                }
+            }
         }
 
         /// <summary>

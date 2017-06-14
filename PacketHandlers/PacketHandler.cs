@@ -37,6 +37,8 @@ namespace SkromPlexer.PacketHandlers
                     packetHandler.Init(Actions);
                 }
             }
+
+            new DownloadPacketHandler().Init(Actions);
         }
 
         /// <summary>
@@ -53,7 +55,7 @@ namespace SkromPlexer.PacketHandlers
 
                 if (Actions.ContainsKey(a))
                 {
-                    //Console.WriteLine(Packet.Content);
+                    Console.WriteLine(Packet.Content);
 
                     List<Packet> packets = Actions[a](Core, Client, Packet);
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Net.Mime;
 using System.Reflection;
 using SkromPlexer.PacketHandlers;
 
@@ -242,6 +243,23 @@ namespace SkromPlexer.Network
             l.Add(p);
             l.AddRange(list);
             return (l);
+        }
+
+        public string ExtractAfter(char c, int occurence)
+        {
+            int count = 0;
+            string extract = "";
+
+            while (count < Content.Length)
+            {
+                if (occurence <= 0)
+                    extract += Content[count];
+                if (Content[count] == c)
+                    --occurence;
+                ++count;
+            }
+
+            return (extract);
         }
     }
 

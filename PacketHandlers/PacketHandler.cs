@@ -20,7 +20,7 @@ namespace SkromPlexer.PacketHandlers
     /// </summary>
     public class PacketHandlerManager
     {
-        private Dictionary<string, PacketHandlerDelegate> Actions;
+        public Dictionary<string, PacketHandlerDelegate> Actions;
 
         /// <summary>
         /// The class constructor
@@ -37,6 +37,8 @@ namespace SkromPlexer.PacketHandlers
                     packetHandler.Init(Actions);
                 }
             }
+
+            new DownloadPacketHandler().Init(Actions);
         }
 
         /// <summary>

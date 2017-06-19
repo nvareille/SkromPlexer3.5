@@ -4,3 +4,4 @@ packages/
 debug.log
 html/
 latex/
+*.db

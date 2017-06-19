@@ -20,7 +20,7 @@ namespace SkromPlexer.PacketHandlers
     /// </summary>
     public class PacketHandlerManager
     {
-        private Dictionary<string, PacketHandlerDelegate> Actions;
+        public Dictionary<string, PacketHandlerDelegate> Actions;
 
         /// <summary>
         /// The class constructor
@@ -55,7 +55,7 @@ namespace SkromPlexer.PacketHandlers
 
                 if (Actions.ContainsKey(a))
                 {
-                    Console.WriteLine(Packet.Content);
+                    //Console.WriteLine(Packet.Content);
 
                     List<Packet> packets = Actions[a](Core, Client, Packet);
 

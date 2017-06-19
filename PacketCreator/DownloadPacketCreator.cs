@@ -14,11 +14,12 @@ namespace SkromPlexer.PacketCreator
         [PacketCreatorFunction("AskDownload", new []
          {
              "int", "File Size",
-             "string", "Hash"
+             "string", "Hash",
+             "string", "Callback"
          })]
-        public static Packet AskDownload(int size, string hash)
+        public static Packet AskDownload(int size, string hash, Packet callback)
         {
-            return (new Packet(MethodBase.GetCurrentMethod(), size, hash));
+            return (new Packet(MethodBase.GetCurrentMethod(), size, hash, callback.Content));
         }
 
         [PacketCreatorFunction("DownloadAccept", new []
@@ -29,6 +30,24 @@ namespace SkromPlexer.PacketCreator
         public static Packet DownloadAccept(int token, string hash)
         {
             return new Packet(MethodBase.GetCurrentMethod(), token, hash);
+        }
+
+        [PacketCreatorFunction("ValidateDL", new []
+         {
+             "int", "DL Token"
+         })]
+        public static Packet ValidateDL(int token)
+        {
+            return (new Packet(MethodBase.GetCurrentMethod(), token));
+        }
+
+        [PacketCreatorFunction("UnvalidateDL", new []
+         {
+             "int", "DL Token"
+         })]
+        public static Packet UnvalidateDL(int token)
+        {
+            return (new Packet(MethodBase.GetCurrentMethod(), token));
         }
     }
 }

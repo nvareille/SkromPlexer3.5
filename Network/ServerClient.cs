@@ -12,7 +12,7 @@ namespace SkromPlexer.Network
         /// The class constructor
         /// </summary>
         /// <param name="s">The Client</param>
-        public ServerClient(Client s) : base(s.GetSocket())
+        public ServerClient(Client s) : base(s.GetSocket(), false)
         {
             UpgradeArgs = s.UpgradeArgs;
         }

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using SkromPlexer.Modules.Download;
 using SkromPlexer.ServerCore;
 using SkromPlexer.Tools;
 
@@ -36,7 +37,7 @@ namespace SkromPlexer.Network
         /// The class constructor
         /// </summary>
         /// <param name="socket">A socket from this client</param>
-        public Client(Socket socket, bool tryfile = false)
+        public Client(Socket socket, bool serverSide, DownloadModule dl = null)
         {
             Socket = socket;
             PacketBuilder = new PacketBuilder();
@@ -44,15 +45,16 @@ namespace SkromPlexer.Network
             SendingPackets = new List<Packet>();
             DisconnectCallbacks = new List<ClientDisconnectDelegate>();
 
-            if (tryfile)
+            if (serverSide)
             {
                 byte[] a = new byte[4];
-                int i = Socket.Receive(a);
+                int i = Socket.Receive(a, 4, SocketFlags.None);
                 DLToken = BitConverter.ToInt32(a, 0);
 
                 if (DLToken != 0)
                 {
                     IsFileSocket = true;
+                    dl.BindTask(this, (elem => elem.Token == DLToken), null, false);
                 }
             }
         }
@@ -160,7 +162,6 @@ namespace SkromPlexer.Network
             {
                 MustDisconnect = true;
             }
-            
         }
 
         /// <summary>

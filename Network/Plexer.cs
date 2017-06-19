@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using SkromPlexer.Configuration;
+using SkromPlexer.Modules.Download;
 using SkromPlexer.PacketHandlers;
 using SkromPlexer.ServerCore;
 
@@ -33,9 +34,10 @@ namespace SkromPlexer.Network
         public List<Client> ToUpgrade;
         public PlexerConfig PlexerConfig;
         private PacketHandlerManager PacketHandler;
+        private DownloadModule DownloadModule;
 
         private List<ServerClient> ServerClients;
-        
+
         /// <summary>
         /// The class constructon
         /// </summary>
@@ -55,6 +57,7 @@ namespace SkromPlexer.Network
         public void Init(Core core)
         {
             ServerClients = core.GameServerClients;
+            DownloadModule = core.GetModule<DownloadModule>();
 
             if (core.IsServer)
                 Listener = new TcpListener(IPAddress.Any, PlexerConfig.Port);
@@ -81,6 +84,11 @@ namespace SkromPlexer.Network
             PacketHandler.TreatPacket(core, client, packet);
         }
 
+        public bool PacketMayBeTreated(string packet)
+        {
+            return (PacketHandler.Actions.ContainsKey(packet));
+        }
+
         /// <summary>
         /// The Update function
         /// </summary>
@@ -92,14 +100,23 @@ namespace SkromPlexer.Network
 
             if (core.IsServer && Listener.Pending())
             {
-                Clients.Add(new Client(Listener.AcceptSocket(), true));
+                try
+                {
+                    Clients.Add(new Client(Listener.AcceptSocket(), true, DownloadModule));
+                }
+                catch (Exception)
+                {
+                }
             }
 
             foreach (var client in Clients)
             {
-                client.TryGetPackets();
-                client.TryTreatPacket(core, this);
-                client.TrySendPackets();
+                if (!client.IsFileSocket)
+                {
+                    client.TryGetPackets();
+                    client.TryTreatPacket(core, this);
+                    client.TrySendPackets();
+                }
             }
 
             foreach (var client in ServerClients)
@@ -152,7 +169,7 @@ namespace SkromPlexer.Network
                     Socket.Connect(address, port);
                     Socket.Send(BitConverter.GetBytes(connectionToken));
 
-                    Client c = new Client(Socket);
+                    Client c = new Client(Socket, false);
                     if (add)
                         ToAddClients.Add(c);
 
@@ -168,21 +185,35 @@ namespace SkromPlexer.Network
         {
             IPAddress[] ip = Dns.GetHostAddresses(IPAdress);
 
-            Socket Socket = new Socket(ip[0].AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            IAsyncResult result = Socket.BeginConnect(ip[0], port, null, null);
-            bool success = result.AsyncWaitHandle.WaitOne(timeout, true);
-
-            if (!success)
+            foreach (IPAddress address in ip)
             {
-                Socket.Close();
-                return (null);
+                try
+                {
+                    Socket Socket = new Socket(address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                    IAsyncResult result = Socket.BeginConnect(address, port, null, null);
+                    bool success = result.AsyncWaitHandle.WaitOne(timeout, true);
+
+                    if (!success)
+                    {
+                        Socket.Close();
+                        return (null);
+                    }
+
+                    Socket.Send(BitConverter.GetBytes(0));
+
+                    Client c = new Client(Socket, false);
+                    if (add)
+                        ToAddClients.Add(c);
+
+                    return (c);
+                }
+                catch (Exception e)
+                {
+                    
+                }
             }
-
-            Client c = new Client(Socket);
-            if (add)
-                ToAddClients.Add(c);
-
-            return (c);
+            
+            return (null);
         }
     }
 }

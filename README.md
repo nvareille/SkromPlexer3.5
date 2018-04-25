@@ -11,7 +11,7 @@ A simple Networking library for client / server communication for .NET 3.5
 # Features
 
 - Automatic connection and disconnection handling
-- Athentication support (Check if a client submitted credentials for example)
+- Authentication support (Check if a client submitted credentials for example)
 - Data transfert
 - Module appending
 - Single thread logic
